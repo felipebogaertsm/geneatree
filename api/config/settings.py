@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "corsheaders",
     # Local apps
     "apps.accounts",
+    "apps.genealogy",
+    "apps.commons",
 ]
 
 MIDDLEWARE = [
