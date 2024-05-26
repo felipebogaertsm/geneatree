@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get -y install \
-    python3.12 \
+    python3.11 \
     python3-pip \
     postgresql \
     postgresql-contrib
