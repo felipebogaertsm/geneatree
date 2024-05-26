@@ -1,0 +1,12 @@
+FROM node:19-alpine as dependencies
+
+WORKDIR /usr/app/
+
+COPY ./package*.json ./
+RUN yarn install --frozen-lockfile
+COPY . .
+
+ENV NODE_ENV=development
+
+EXPOSE 3000
+ENTRYPOINT ["yarn", "dev"]
