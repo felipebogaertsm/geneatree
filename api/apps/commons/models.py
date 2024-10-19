@@ -9,7 +9,16 @@ class Location(models.Model):
     postal_code = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        parts = [
+            self.street_address,
+            self.city,
+            self.state,
+            self.country,
+            self.postal_code,
+        ]
+
+        parts = [part for part in parts if part]
+        return ", ".join(parts) if parts else "Unknown Location"
 
 
 class FileAttachment(models.Model):
