@@ -23,6 +23,7 @@ class FamilyMember(models.Model):
         related_name="births",
     )
 
+    is_dead = models.BooleanField(default=False)
     death_date = models.DateField(blank=True, null=True)
     death_location = models.ForeignKey(
         Location,
@@ -86,6 +87,7 @@ class Union(models.Model):
         related_name="unions",
     )
 
+    is_divorced = models.BooleanField(default=False)
     divorce_date = models.DateField(blank=True, null=True)
 
     source_files = models.ManyToManyField(
