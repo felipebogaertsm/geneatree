@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from apps.accounts.models import User
-from apps.commons.models import Location
+from apps.commons.models import FileAttachment, Location
 
 
 class FamilyMember(models.Model):
@@ -40,9 +40,6 @@ class FamilyMember(models.Model):
         related_name="children",
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     user = models.ForeignKey(
         User,
         related_name="family_members",
@@ -50,6 +47,15 @@ class FamilyMember(models.Model):
         null=True,
         blank=True,
     )
+
+    source_files = models.ManyToManyField(
+        FileAttachment,
+        related_name="family_members",
+        blank=True,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         self.updated_at = timezone.now()
@@ -81,6 +87,19 @@ class Union(models.Model):
     )
 
     divorce_date = models.DateField(blank=True, null=True)
+
+    source_files = models.ManyToManyField(
+        FileAttachment,
+        related_name="unions",
+        blank=True,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        self.updated_at = timezone.now()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.parent_1} & {self.parent_2} - {self.union_date or 'No marriage date'}"
