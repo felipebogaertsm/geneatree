@@ -16,7 +16,7 @@ class FamilyMemberAdmin(admin.ModelAdmin):
     search_fields = ("first_name", "surname", "user__email")
     filter_horizontal = ("parents", "source_files")
     date_hierarchy = "birth_date"
-    ordering = ("surname", "first_name")
+    ordering = ("-birth_date", "first_name", "surname")
 
     fieldsets = (
         (None, {"fields": ("first_name", "surname", "sex", "user")}),
