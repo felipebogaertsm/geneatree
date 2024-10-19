@@ -39,6 +39,7 @@ class FamilyMember(models.Model):
         "self",
         symmetrical=False,
         related_name="children",
+        blank=True,
     )
 
     user = models.ForeignKey(
