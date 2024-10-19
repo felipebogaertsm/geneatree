@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils import timezone
 
 from apps.accounts.models import User
+from apps.commons.models import Location
 
 
 class FamilyMember(models.Model):
@@ -13,7 +15,22 @@ class FamilyMember(models.Model):
     surname = models.CharField(max_length=30, blank=True)
 
     birth_date = models.DateField(blank=True, null=True)
+    birth_location = models.ForeignKey(
+        Location,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="births",
+    )
+
     death_date = models.DateField(blank=True, null=True)
+    death_location = models.ForeignKey(
+        Location,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="deaths",
+    )
 
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
 
@@ -23,6 +40,9 @@ class FamilyMember(models.Model):
         related_name="children",
     )
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     user = models.ForeignKey(
         User,
         related_name="family_members",
@@ -30,6 +50,10 @@ class FamilyMember(models.Model):
         null=True,
         blank=True,
     )
+
+    def save(self, *args, **kwargs):
+        self.updated_at = timezone.now()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.first_name} {self.surname}"
@@ -48,6 +72,14 @@ class Union(models.Model):
     )
 
     union_date = models.DateField(blank=True, null=True)
+    union_location = models.ForeignKey(
+        Location,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="unions",
+    )
+
     divorce_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
