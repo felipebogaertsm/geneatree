@@ -1,7 +1,6 @@
 from django.db import models
 
 from apps.accounts.models import User
-from apps.commons.models import Date
 
 
 class FamilyMember(models.Model):
@@ -11,22 +10,10 @@ class FamilyMember(models.Model):
     ]
 
     first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30, blank=True)
+    surname = models.CharField(max_length=30, blank=True)
 
-    birth = models.OneToOneField(
-        Date,
-        related_name="birth_family_member",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
-    death = models.OneToOneField(
-        Date,
-        related_name="death_family_member",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
+    birth_date = models.DateField(blank=True, null=True)
+    death_date = models.DateField(blank=True, null=True)
 
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
 
@@ -34,7 +21,6 @@ class FamilyMember(models.Model):
         "self",
         symmetrical=False,
         related_name="children",
-        through="ParentChild",
     )
 
     user = models.ForeignKey(
@@ -46,7 +32,7 @@ class FamilyMember(models.Model):
     )
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.surname}"
 
 
 class Union(models.Model):
@@ -61,41 +47,8 @@ class Union(models.Model):
         on_delete=models.CASCADE,
     )
 
-    date_of_marriage = models.OneToOneField(
-        Date,
-        related_name="date_of_marriage_union",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
-    date_of_divorce = models.OneToOneField(
-        Date,
-        related_name="date_of_divorce_union",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
+    union_date = models.DateField(blank=True, null=True)
+    divorce_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.parent_1} & {self.parent_2} - {self.date_of_marriage or 'No marriage date'}"
-
-
-class ParentChild(models.Model):
-    parent = models.ForeignKey(
-        FamilyMember,
-        related_name="child_set",
-        on_delete=models.CASCADE,
-    )
-    child = models.ForeignKey(
-        FamilyMember,
-        related_name="parent_set",
-        on_delete=models.CASCADE,
-    )
-    union = models.ForeignKey(
-        Union,
-        related_name="children",
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self):
-        return f"{self.parent} -> {self.child}"
+        return f"{self.parent_1} & {self.parent_2} - {self.union_date or 'No marriage date'}"
